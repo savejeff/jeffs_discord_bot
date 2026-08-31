@@ -1,0 +1,6 @@
+# Manual testcase projects contain generated environments and may contain
+# project-local credentials. Keep only this directory's policy documentation.
+/*
+!/.gitignore
+!/README.md
+

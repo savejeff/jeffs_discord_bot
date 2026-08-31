@@ -1,0 +1,24 @@
+.git
+.gitignore
+.pytest_cache
+__pycache__
+*.py[cod]
+*.egg-info
+.env
+.env.*
+config/*.env
+data
+docs
+logs
+res/*
+!res/wiki/
+!res/wiki/**
+scripts/*
+!scripts/generate_command_config.py
+!scripts/register_commands.py
+# The Codex image needs the complete nested project seed, including lifecycle
+# directories whose names are otherwise ignored at the repository root.
+!config/codex-worker/workspace-template/**
+secrets
+tests
+tmp

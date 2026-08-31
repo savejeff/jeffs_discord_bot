@@ -1,0 +1,4 @@
+# Development project islands may contain credentials, local environments, and state.
+/*
+!/.gitignore
+!/README.md

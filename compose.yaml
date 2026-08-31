@@ -1,0 +1,96 @@
+name: discord-agent-bot
+
+services:
+  discord-agent-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: discord-agent-bot:milestone-1
+    container_name: discord-agent-bot
+    restart: unless-stopped
+    environment:
+      DISCORD_SECRETS_FILE: /run/secrets/discord-agent-bot.json
+      CODEX_WORKER_WEBSOCKET_URL: ws://codex-agent-worker:8090/ws
+      CODEX_WORKER_RESPONSE_TIMEOUT_SECONDS: "840"
+      DISCORD_GATEWAY_DATABASE: /var/lib/discord-gateway/gateway.db
+    depends_on:
+      codex-agent-worker:
+        condition: service_healthy
+    volumes:
+      - type: bind
+        source: ./secrets/secrets.json
+        target: /run/secrets/discord-agent-bot.json
+        read_only: true
+      - discord-gateway-data:/var/lib/discord-gateway
+    ports:
+      - "127.0.0.1:6700:8080"
+    security_opt:
+      - no-new-privileges:true
+
+  discord-gateway-observer:
+    image: discord-agent-bot:milestone-1
+    container_name: discord-gateway-observer
+    restart: unless-stopped
+    read_only: true
+    command: ["python", "-m", "discord_gateway_observer"]
+    environment:
+      DISCORD_SECRETS_FILE: /run/secrets/discord-agent-bot.json
+      DISCORD_GATEWAY_DATABASE: /var/lib/discord-gateway/gateway.db
+      DISCORD_GATEWAY_HEALTH_FILE: /var/lib/discord-gateway/healthy
+      CODEX_WORKER_WEBSOCKET_URL: ws://codex-agent-worker:8090/ws
+      CODEX_WORKER_RESPONSE_TIMEOUT_SECONDS: "840"
+    depends_on:
+      discord-agent-bot:
+        condition: service_healthy
+      codex-agent-worker:
+        condition: service_healthy
+    volumes:
+      - type: bind
+        source: ./secrets/secrets.json
+        target: /run/secrets/discord-agent-bot.json
+        read_only: true
+      - discord-gateway-data:/var/lib/discord-gateway
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    healthcheck:
+      test: ["CMD", "python", "-m", "discord_gateway_observer.health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 20s
+      retries: 3
+    security_opt:
+      - no-new-privileges:true
+
+  codex-agent-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.codex-worker
+    image: codex-agent-worker:poc-1
+    container_name: codex-agent-worker
+    restart: unless-stopped
+    read_only: true
+    environment:
+      CODEX_HOME: /home/codex/.codex
+      CODEX_WORKER_DATABASE: /var/lib/codex-worker/worker.db
+      CODEX_AGENT_TAG: dev1
+      CODEX_AGENTS_CONFIG: /app/config/config_agents.json
+      CODEX_WORKSPACES_ROOT: /workspaces
+      CODEX_WORKSPACE_TEMPLATE: /opt/codex-workspace-template
+      CODEX_TURN_TIMEOUT_SECONDS: "780"
+      CODEX_WORKER_TIME_ZONE: UTC
+    volumes:
+      - codex-home:/home/codex/.codex
+      - codex-worker-data:/var/lib/codex-worker
+      - codex-workspaces:/workspaces
+    expose:
+      - "8090"
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  codex-home:
+  codex-worker-data:
+  codex-workspaces:
+  discord-gateway-data:

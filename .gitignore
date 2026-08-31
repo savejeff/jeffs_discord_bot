@@ -1,0 +1,37 @@
+# Local Python environment created by the bootstrap scripts.
+/scripts/.venv/
+
+# Mutable and temporary project material.
+/data/*
+!/data/.gitkeep
+/logs/*
+!/logs/.gitkeep
+/tmp/*
+!/tmp/.gitkeep
+
+# Keep one synthetic public example while excluding deployment-local knowledge.
+/res/wiki/*
+!/res/wiki/MOCKUP.md
+
+# Project-type generated output.
+__pycache__/
+*.py[cod]
+/.pytest_cache/
+/build/
+/dist/
+*.egg-info/
+
+# Local application and deployment secrets.
+/.env
+/.env.*
+!/.env.example
+/config/*.env
+!/config/*.env.example
+/secret/
+/secrets/
+
+# Local service state.
+*.sqlite
+*.sqlite3
+
+*.zip

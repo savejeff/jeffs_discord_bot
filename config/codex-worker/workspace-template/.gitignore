@@ -1,0 +1,25 @@
+# Project-local Python environment and generated Python files.
+/scripts/.venv/
+__pycache__/
+*.py[cod]
+/.pytest_cache/
+
+# Mutable, diagnostic, and temporary workspace material.
+/data/*
+!/data/.gitkeep
+/logs/*
+!/logs/.gitkeep
+/tmp/*
+!/tmp/.gitkeep
+!/tmp/download/
+!/tmp/upload/
+/tmp/download/*
+/tmp/upload/*
+!/tmp/download/.gitkeep
+!/tmp/upload/.gitkeep
+
+# Credentials never belong in an agent workspace.
+/.env
+/.env.*
+/secret/
+/secrets/

@@ -1,0 +1,426 @@
+[
+	{
+		"name": "hello",
+		"type": 1,
+		"description": "Return world!",
+		"options": [
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "echo",
+		"type": 1,
+		"description": "Return the supplied text.",
+		"options": [
+			{
+				"name": "text",
+				"description": "Text to return.",
+				"type": 3,
+				"required": true,
+				"max_length": 200
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "millis",
+		"type": 1,
+		"description": "Return milliseconds since the application started.",
+		"options": [
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "add",
+		"type": 1,
+		"description": "Add two numbers or concatenate two text values.",
+		"options": [
+			{
+				"name": "left",
+				"description": "First number or text value.",
+				"type": 3,
+				"required": true,
+				"max_length": 200
+			},
+			{
+				"name": "right",
+				"description": "Second number or text value.",
+				"type": 3,
+				"required": true,
+				"max_length": 200
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "dev_history",
+		"type": 1,
+		"description": "Return recent messages from the current channel or thread.",
+		"options": [
+			{
+				"name": "count",
+				"description": "Number of recent messages to return (default 1).",
+				"type": 4,
+				"required": false,
+				"min_value": 1,
+				"max_value": 10
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "dev_public",
+		"type": 1,
+		"description": "Return a response visible to everyone in the channel.",
+		"options": [
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "dev_deferred",
+		"type": 1,
+		"description": "Return after a delay longer than 15 seconds.",
+		"options": [
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "respond",
+		"type": 1,
+		"description": "Ask the private Codex worker to answer a prompt.",
+		"options": [
+			{
+				"name": "prompt",
+				"description": "Question or instruction for the Codex worker.",
+				"type": 3,
+				"required": true,
+				"max_length": 1000
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "prompt",
+		"type": 1,
+		"description": "Prompt a persistent tagged Codex agent.",
+		"options": [
+			{
+				"name": "prompt",
+				"description": "Question or instruction for the Codex agent.",
+				"type": 3,
+				"required": true,
+				"min_length": 1,
+				"max_length": 1000
+			},
+			{
+				"name": "agent_tag",
+				"description": "Persistent agent tag; a new valid tag creates an agent.",
+				"type": 3,
+				"required": false,
+				"max_length": 64
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "agent_thread",
+		"type": 1,
+		"description": "Create a creator-only Codex agent thread.",
+		"options": [
+			{
+				"name": "agent_tag",
+				"description": "Required existing or new persistent agent tag.",
+				"type": 3,
+				"required": true,
+				"max_length": 64
+			},
+			{
+				"name": "model",
+				"description": "Model shorthand; each value also sets its reasoning level.",
+				"type": 3,
+				"required": true,
+				"choices": [
+					{
+						"name": "low",
+						"value": "low"
+					},
+					{
+						"name": "medium",
+						"value": "medium"
+					},
+					{
+						"name": "high",
+						"value": "high"
+					},
+					{
+						"name": "luna-low",
+						"value": "luna-low"
+					},
+					{
+						"name": "luna-medium",
+						"value": "luna-medium"
+					},
+					{
+						"name": "luna-high",
+						"value": "luna-high"
+					},
+					{
+						"name": "terra-low",
+						"value": "terra-low"
+					},
+					{
+						"name": "terra-medium",
+						"value": "terra-medium"
+					},
+					{
+						"name": "terra-high",
+						"value": "terra-high"
+					}
+				]
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "explain",
+		"type": 1,
+		"description": "Explain a topic using the application wiki and general knowledge.",
+		"options": [
+			{
+				"name": "topic",
+				"description": "Topic or question to explain.",
+				"type": 3,
+				"required": true,
+				"min_length": 1,
+				"max_length": 1000
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "summarize",
+		"type": 1,
+		"description": "Summarize recent channel or thread history for a topic.",
+		"options": [
+			{
+				"name": "topic",
+				"description": "Topic or question the summary should focus on.",
+				"type": 3,
+				"required": true,
+				"min_length": 1,
+				"max_length": 500
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "agent_list",
+		"type": 1,
+		"description": "List configured and previously created Codex agent tags.",
+		"options": [
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "agent_config",
+		"type": 1,
+		"description": "Set a tagged agent model and reasoning level. Moderator only.",
+		"options": [
+			{
+				"name": "agent_tag",
+				"description": "Agent tag to configure.",
+				"type": 3,
+				"required": true,
+				"max_length": 64
+			},
+			{
+				"name": "model",
+				"description": "Model shorthand; each value also sets its reasoning level.",
+				"type": 3,
+				"required": true,
+				"choices": [
+					{
+						"name": "low",
+						"value": "low"
+					},
+					{
+						"name": "medium",
+						"value": "medium"
+					},
+					{
+						"name": "high",
+						"value": "high"
+					},
+					{
+						"name": "luna-low",
+						"value": "luna-low"
+					},
+					{
+						"name": "luna-medium",
+						"value": "luna-medium"
+					},
+					{
+						"name": "luna-high",
+						"value": "luna-high"
+					},
+					{
+						"name": "terra-low",
+						"value": "terra-low"
+					},
+					{
+						"name": "terra-medium",
+						"value": "terra-medium"
+					},
+					{
+						"name": "terra-high",
+						"value": "terra-high"
+					}
+				]
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "agent_reset",
+		"type": 1,
+		"description": "Reset a tagged agent workspace from its template. Moderator only.",
+		"options": [
+			{
+				"name": "agent_tag",
+				"description": "Agent tag whose workspace will be reset.",
+				"type": 3,
+				"required": true,
+				"max_length": 64
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "agent_delete",
+		"type": 1,
+		"description": "Delete a tagged agent and its workspace. Moderator only.",
+		"options": [
+			{
+				"name": "agent_tag",
+				"description": "Agent tag to delete permanently.",
+				"type": 3,
+				"required": true,
+				"max_length": 64
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "agent_report",
+		"type": 1,
+		"description": "Show one tagged agent's moderator-only worker status report.",
+		"options": [
+			{
+				"name": "agent_tag",
+				"description": "Agent tag to report.",
+				"type": 3,
+				"required": true,
+				"max_length": 64
+			},
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	},
+	{
+		"name": "help",
+		"type": 1,
+		"description": "Show all available commands.",
+		"options": [
+			{
+				"name": "public",
+				"description": "Show the response to everyone in the channel.",
+				"type": 5,
+				"required": false
+			}
+		]
+	}
+]

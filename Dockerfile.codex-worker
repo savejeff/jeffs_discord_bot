@@ -1,0 +1,57 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+	PYTHONUNBUFFERED=1 \
+	PYTHONPATH=/app/src \
+	HOME=/home/codex \
+	CODEX_HOME=/home/codex/.codex \
+	PATH=/home/codex/.local/bin:${PATH}
+
+# The worker receives no host project mount. Codex and every operation it
+# starts remain inside this container's filesystem for the proof of concept.
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+	&& apt-get install --yes --no-install-recommends ca-certificates curl git tzdata \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& useradd --create-home --uid 10002 codex \
+	&& mkdir --parents /app/config /workspaces /var/lib/codex-worker /home/codex/.codex \
+		/opt/codex-workspace-template/docs/wiki \
+	&& chown --recursive codex:codex /app /workspaces /var/lib/codex-worker \
+		/home/codex /opt/codex-workspace-template
+
+WORKDIR /app
+COPY requirements.txt ./requirements.txt
+RUN python -m pip install --no-cache-dir --requirement requirements.txt
+
+COPY --chown=codex:codex src/codex_agent_worker/ ./src/codex_agent_worker/
+COPY --chown=codex:codex config/config_agents.json ./config/config_agents.json
+COPY --chown=codex:codex config/codex-worker/workspace-template/ /opt/codex-workspace-template/
+RUN chmod 0755 /opt/codex-workspace-template/scripts/activate_venv.sh
+
+USER codex
+
+# The official standalone installer places the Codex CLI in the unprivileged
+# user's home. A production image should replace this moving installer with a
+# reviewed, pinned artifact when OpenAI exposes an appropriate pinning route.
+RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh \
+	&& codex --version
+
+# Combine the tracked generic project with deployment-specific wiki content.
+# Worker startup preserves existing workspace work and wiki content.
+COPY --chown=codex:codex res/wiki/ /opt/codex-workspace-template/docs/wiki/
+
+# Fail the build if the runtime user cannot initialize and write an agent
+# workspace. The wiki remains writable at the filesystem level by design.
+RUN test -r /app/config/config_agents.json \
+	&& test -r /opt/codex-workspace-template/AGENTS.md \
+	&& test -x /opt/codex-workspace-template/scripts/activate_venv.sh \
+	&& test -r /opt/codex-workspace-template/docs/wiki \
+	&& test -x /opt/codex-workspace-template/docs/wiki \
+	&& test -w /workspaces
+
+WORKDIR /app
+EXPOSE 8090
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+	CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/health', timeout=2).read()"]
+
+CMD ["uvicorn", "codex_agent_worker.application:create_app", "--factory", "--host", "0.0.0.0", "--port", "8090", "--workers", "1", "--ws-max-size", "131072", "--no-access-log"]
